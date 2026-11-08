@@ -1,16 +1,14 @@
 import { SignUpForm } from "@/components/sign-up-form";
-import { isAuthConfigured } from "@/lib/auth";
+import { getEnabledSocialProviders, isAuthConfigured } from "@/lib/auth";
 
 export default function SignUpPage() {
+  const socialProviders = getEnabledSocialProviders();
+
   return (
     <SignUpForm
-      databaseReady={isAuthConfigured()}
-      githubEnabled={Boolean(
-        process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET,
-      )}
-      googleEnabled={Boolean(
-        process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
-      )}
+      authReady={isAuthConfigured()}
+      githubEnabled={socialProviders.github}
+      googleEnabled={socialProviders.google}
     />
   );
 }

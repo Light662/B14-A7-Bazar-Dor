@@ -8,7 +8,7 @@ BazarDor is a responsive Bengali-language market-price website for checking curr
 - Home page price movers, ticker, and product catalog.
 - Category search and numeric price sorting, including Bengali digit input.
 - Product market-price comparison with clearly identified derived averages.
-- Better Auth email/password sign-up and sign-in, Google/GitHub OAuth when configured, and protected product details.
+- Self-hosted Better Auth email/password and optional Google/GitHub sign-in, with protected product details.
 - Account profile and name update.
 - Responsive layouts, loading skeletons, and React Hot Toast notifications.
 
@@ -16,7 +16,7 @@ BazarDor is a responsive Bengali-language market-price website for checking curr
 
 - Next.js App Router, React, and TypeScript
 - Tailwind CSS 4 and custom responsive design tokens
-- Better Auth with Neon PostgreSQL (`pg`)
+- Better Auth with Neon PostgreSQL
 - React Hot Toast
 - BazarDor public API
 
@@ -24,7 +24,7 @@ BazarDor is a responsive Bengali-language market-price website for checking curr
 
 - Node.js 20.9 or later
 - npm
-- A Neon PostgreSQL database for authentication
+- Access to the existing Neon PostgreSQL production branch
 
 ## Install and configure
 
@@ -34,34 +34,23 @@ BazarDor is a responsive Bengali-language market-price website for checking curr
    npm install
    ```
 
-2. Copy `.env.example` to `.env` and fill in the values:
+2. Create `.env.local` from `.env.example` and configure the existing Neon PostgreSQL connection:
 
-   ```text
-   DATABASE_URL=postgresql://...       # Neon connection string; use sslmode=require
-   BETTER_AUTH_SECRET=...              # At least 32 random characters
-   BETTER_AUTH_URL=http://localhost:3000
-   GOOGLE_CLIENT_ID=                   # Optional
-   GOOGLE_CLIENT_SECRET=               # Optional
-   GITHUB_CLIENT_ID=                   # Optional
-   GITHUB_CLIENT_SECRET=               # Optional
-   ```
+   - Use the pooled Neon connection URL for app traffic.
+   - Generate `BETTER_AUTH_SECRET` with `openssl rand -base64 32`.
+   - Set `BETTER_AUTH_URL` to the app origin, such as `http://localhost:3000`.
+   - Google and GitHub buttons are enabled only when both credentials for that provider are set.
+   - Set each OAuth app's callback URL to `{BETTER_AUTH_URL}/api/auth/callback/google` or `{BETTER_AUTH_URL}/api/auth/callback/github`.
 
-   Generate an auth secret with `openssl rand -base64 32`. Keep `.env` private; it is ignored by Git.
-
-3. If enabling Google or GitHub, create OAuth applications and set their callback URLs:
-
-   - Google: `http://localhost:3000/api/auth/callback/google`
-   - GitHub: `http://localhost:3000/api/auth/callback/github`
-
-   For production, use the deployed origin in `BETTER_AUTH_URL` and in each provider's callback URL. OAuth buttons remain unavailable until both provider credentials are configured.
-
-4. Create Better Auth's PostgreSQL tables:
+3. Ensure Better Auth's PostgreSQL schema exists in the `public` schema:
 
    ```bash
-   npm run auth:migrate
+   npx auth@latest migrate
    ```
 
-5. Start the development server:
+   This app uses Better Auth's standard `user`, `session`, `account`, and `verification` tables. The existing Neon `neon_auth` schema is not used or modified. Keep `.env.local` private; it is ignored by Git.
+
+4. Start the development server:
 
    ```bash
    npm run dev
@@ -79,7 +68,7 @@ npm run build
 
 ## Deployment
 
-Deploy the Next.js app to Vercel. Add `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, and any OAuth credentials to the Vercel project environment. Run the Better Auth migration against the production database before enabling authentication.
+Deploy the Next.js app to Vercel and set `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` in the Production environment. Add Google and GitHub credentials there to enable those providers. Configure each OAuth app with the matching Vercel callback URL. The app uses self-hosted Better Auth; existing Neon Managed Auth data is left untouched and is not imported automatically.
 
-- Live deployment: [Add deployment URL](https://example.com)
-- GitHub repository: [Add repository URL](https://github.com/)
+- Live deployment: https://bazar-dor-flame-one.vercel.app/
+- GitHub repository: https://github.com/Light662/B14-A7-Bazar-Dor

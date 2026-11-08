@@ -12,14 +12,14 @@ export function SignInForm({
   nextPath,
   reason,
   registered,
-  databaseReady,
+  authReady,
   googleEnabled,
   githubEnabled,
 }: {
   nextPath: string;
   reason?: string;
   registered?: boolean;
-  databaseReady: boolean;
+  authReady: boolean;
   googleEnabled: boolean;
   githubEnabled: boolean;
 }) {
@@ -91,21 +91,21 @@ export function SignInForm({
                   type="password"
                 />
               </label>
-              {!databaseReady && (
+              {!authReady && (
                 <p className="form-note">
-                  সাইন ইন চালু করতে .env ফাইলে ডাটাবেস, অথেন্টিকেশন সিক্রেট ও বেস URL সেট করুন।
+                  সাইন ইন চালু করতে সার্ভারের authentication environment কনফিগারেশন সম্পূর্ণ করুন।
                 </p>
               )}
               <button
                 className="button button-primary button-full"
-                disabled={loading || !databaseReady}
+                disabled={loading || !authReady}
                 type="submit"
               >
                 {loading ? "অপেক্ষা করুন…" : "সাইন ইন"}
               </button>
               <div className="divider"><span>অথবা</span></div>
               <SocialLoginButtons
-                authReady={databaseReady}
+                authReady={authReady}
                 callbackURL={nextPath}
                 githubEnabled={githubEnabled}
                 googleEnabled={googleEnabled}

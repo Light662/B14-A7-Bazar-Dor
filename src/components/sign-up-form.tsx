@@ -8,11 +8,11 @@ import { authClient } from "@/lib/auth-client";
 import { SocialLoginButtons } from "@/components/social-login-buttons";
 
 export function SignUpForm({
-  databaseReady,
+  authReady,
   googleEnabled,
   githubEnabled,
 }: {
-  databaseReady: boolean;
+  authReady: boolean;
   googleEnabled: boolean;
   githubEnabled: boolean;
 }) {
@@ -93,17 +93,17 @@ export function SignUpForm({
                 type="password"
               />
             </label>
-            {!databaseReady && (
+            {!authReady && (
               <p className="form-note">
-                অ্যাকাউন্ট তৈরি করতে .env ফাইলে ডাটাবেস, অথেন্টিকেশন সিক্রেট ও বেস URL সেট করুন।
+                অ্যাকাউন্ট তৈরি করতে সার্ভারের authentication environment কনফিগারেশন সম্পূর্ণ করুন।
               </p>
             )}
-            <button className="button button-primary button-full" disabled={loading || !databaseReady} type="submit">
+            <button className="button button-primary button-full" disabled={loading || !authReady} type="submit">
               {loading ? "অপেক্ষা করুন…" : "অ্যাকাউন্ট তৈরি করুন"}
             </button>
             <div className="divider"><span>অথবা</span></div>
             <SocialLoginButtons
-              authReady={databaseReady}
+              authReady={authReady}
               callbackURL="/"
               githubEnabled={githubEnabled}
               googleEnabled={googleEnabled}

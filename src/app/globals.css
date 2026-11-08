@@ -1094,15 +1094,10 @@ summary:focus-visible {
   opacity: 0.6;
 }
 
-.google-mark {
-  color: #4285f4;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.github-mark {
-  font-size: 15px;
+.social-provider-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
 }
 
 .auth-switch {
