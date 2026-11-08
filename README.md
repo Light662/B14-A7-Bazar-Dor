@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# বাজার দর (BazarDor)
 
-## Getting Started
+BazarDor is a responsive Bengali-language market-price website for checking current prices and recent changes for everyday products across Bangladesh.
 
-First, run the development server:
+## Features
+
+- Live product and category data from the BazarDor API, with two fallback API servers.
+- Home page price movers, ticker, and product catalog.
+- Category search and numeric price sorting, including Bengali digit input.
+- Product market-price comparison with clearly identified derived averages.
+- Better Auth email/password sign-up and sign-in, Google/GitHub OAuth when configured, and protected product details.
+- Account profile and name update.
+- Responsive layouts, loading skeletons, and React Hot Toast notifications.
+
+## Technology
+
+- Next.js App Router, React, and TypeScript
+- Tailwind CSS 4 and custom responsive design tokens
+- Better Auth with Neon PostgreSQL (`pg`)
+- React Hot Toast
+- BazarDor public API
+
+## Requirements
+
+- Node.js 20.9 or later
+- npm
+- A Neon PostgreSQL database for authentication
+
+## Install and configure
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Copy `.env.example` to `.env` and fill in the values:
+
+   ```text
+   DATABASE_URL=postgresql://...       # Neon connection string; use sslmode=require
+   BETTER_AUTH_SECRET=...              # At least 32 random characters
+   BETTER_AUTH_URL=http://localhost:3000
+   GOOGLE_CLIENT_ID=                   # Optional
+   GOOGLE_CLIENT_SECRET=               # Optional
+   GITHUB_CLIENT_ID=                   # Optional
+   GITHUB_CLIENT_SECRET=               # Optional
+   ```
+
+   Generate an auth secret with `openssl rand -base64 32`. Keep `.env` private; it is ignored by Git.
+
+3. If enabling Google or GitHub, create OAuth applications and set their callback URLs:
+
+   - Google: `http://localhost:3000/api/auth/callback/google`
+   - GitHub: `http://localhost:3000/api/auth/callback/github`
+
+   For production, use the deployed origin in `BETTER_AUTH_URL` and in each provider's callback URL. OAuth buttons remain unavailable until both provider credentials are configured.
+
+4. Create Better Auth's PostgreSQL tables:
+
+   ```bash
+   npm run auth:migrate
+   ```
+
+5. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000).
+
+## Quality checks
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run typecheck
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Deploy the Next.js app to Vercel. Add `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, and any OAuth credentials to the Vercel project environment. Run the Better Auth migration against the production database before enabling authentication.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Live deployment: [Add deployment URL](https://example.com)
+- GitHub repository: [Add repository URL](https://github.com/)
